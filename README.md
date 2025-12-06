@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio — Soft 3D</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1: #f6f7fb; /* very light lavender */
+      --soft-1: #f8eefc; /* pale mauve */
+      --soft-2: #eaf8ff; /* pale sky */
+      --accent: #7aa2ff; /* soft blue */
+      --muted: #9aa7b2; /* muted gray */
+      --card: rgba(255,255,255,0.85);
+      --glass: rgba(255,255,255,0.55);
+      --shadow: 0 10px 30px rgba(50,60,80,0.08);
+      --rounded: 18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, var(--soft-1), transparent 10%),
+                  radial-gradient(800px 400px at 90% 90%, var(--soft-2), transparent 10%),
+                  var(--bg-1);
+      color:#21303a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* page wrapper */
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:28px;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center
+    }
+    .logo{
+      width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#b3d8ff);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:var(--shadow);
+      transform:translateZ(30px);
+    }
+    .brand h1{margin:0;font-size:18px}
+    .brand p{margin:0;font-size:13px;color:var(--muted)}
+
+    nav{display:flex;gap:12px}
+    nav a{padding:8px 12px;border-radius:12px;text-decoration:none;color:inherit;font-weight:600;background:transparent}
+    nav a.cta{background:var(--accent);color:white;box-shadow:0 6px 18px rgba(122,162,255,0.25)}
+
+    /* hero + 3D card layout */
+    .grid{
+      display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start;
+    }
+
+    .hero{
+      padding:28px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+      box-shadow:var(--shadow);backdrop-filter: blur(6px);position:relative;overflow:hidden;
+    }
+
+    .hero h2{margin:0;font-size:28px}
+    .hero p{color:var(--muted);margin-top:10px;line-height:1.6}
+
+    /* projects list */
+    .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+    .proj{
+      border-radius:14px;padding:12px;background:var(--card);box-shadow:0 6px 20px rgba(80,90,110,0.06);cursor:pointer;
+      transform-style:preserve-3d;transition:transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s;display:flex;gap:12px;align-items:center
+    }
+    .proj:hover{transform:translateY(-8px) translateZ(12px);box-shadow:0 18px 40px rgba(60,80,120,0.08)}
+    .proj .thumb{width:62px;height:62px;border-radius:10px;background:linear-gradient(135deg,#ffe6f0,#e6f0ff);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .proj h4{margin:0;font-size:14px}
+    .proj p{margin:0;font-size:12px;color:var(--muted)}
+
+    /* right column: 3D profile card */
+    .card-3d-wrap{perspective:1200px}
+    .card-3d{
+      width:100%;max-width:420px;height:520px;border-radius:var(--rounded);background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+      box-shadow:0 24px 60px rgba(30,40,70,0.09);position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .15s ease-out;
+    }
+    .card-inner{
+      position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;gap:18px;z-index:3;transform-style:preserve-3d
+    }
+    .avatar{
+      width:96px;height:96px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:linear-gradient(135deg,#ffd8d8,#dff4ff);box-shadow:0 10px 30px rgba(60,80,120,0.06);transform:translateZ(40px)
+    }
+    .meta{display:flex;align-items:center;justify-content:space-between}
+    .meta .info h3{margin:0}
+    .meta .info p{margin:0;color:var(--muted);font-size:13px}
+    .stats{display:flex;gap:12px;margin-top:8px}
+    .stat{background:var(--glass);padding:10px;border-radius:12px;min-width:70px;text-align:center;box-shadow:0 6px 18px rgba(20,30,40,0.03);transform:translateZ(20px)}
+
+    /* decorative floating layers for 3D depth */
+    .layer{
+      position:absolute;border-radius:20px;filter:blur(40px);opacity:.6;transform:translateZ(0);
+    }
+    .l1{width:260px;height:160px;right:-60px;top:-40px;background:linear-gradient(135deg,#ffd8e6, #cfe9ff)}
+    .l2{width:200px;height:200px;left:-70px;bottom:-60px;background:linear-gradient(135deg,#e8fff9,#f0ecff)}
+
+    /* project detail area */
+    .work-list{margin-top:18px}
+    .work-item{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.55));box-shadow:0 8px 22px rgba(20,30,40,0.04);margin-bottom:12px}
+    .work-item h4{margin:0 0 6px 0}
+    .work-item p{margin:0;color:var(--muted);font-size:13px}
+
+    footer{margin-top:22px;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:920px){
+      .grid{grid-template-columns:1fr;}
+      .card-3d{height:420px}
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">Me</div>
+        <div>
+          <h1>Portofolio — Serli Dwi Lestari Oktavia</h1>
+          <p>Jual puding &amp; Gorengan nugget</p>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#works">Works</a>
+        <a href="https://wa.me/6289676242291?text=Halo,%20saya%20mau%20pesan%20Puding%20Lava" target="_blank" class="cta">Contact</a>
+      </nav>
+    </header>
+
+    <section class="grid">
+      <main class="hero">
+        <h2>Halo, saya Serli 👋</h2>
+        <p>Saya membuat puding ramah biaya dengan sentuhan di lidah lembut. Di bawah ini toping terbaru.</p>
+
+        <div class="projects" aria-hidden="false">
+          <div class="proj">
+            <div class="thumb">A</div>
+            <div>
+              <h4>Puding Coklat</h4>
+              <p>Lava Vanila &amp; Toping Oreo</p>
+              <p>Rp 8.500</p>
+            </div>
+          </div>
+
+          <div class="proj">
+            <div class="thumb">B</div>
+            <div>
+              <h4>Puding Coklat</h4>
+              <p>Lava Vanila &amp; Toping Keju</p>
+              <p>Rp 9.000</p>
+            </div>
+          </div>
+
+          <div class="proj">
+            <div class="thumb">C</div>
+            <div>
+              <h4>Puding Coklat</h4>
+              <p>Lava Vanila &amp; Tanpa Toping</p>
+              <p>Rp 8.000</p>
+            </div>
+          </div>
+
+          <div class="proj">
+            <div class="thumb">D</div>
+            <div>
+              <h4>Nugget</h4>
+              <p>Ice Cream &amp; Bulat</p>
+              <p>Rp. 1.000</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="work-list" id="works">
+          <div class="work-item">
+            <h4>Puding — Lava </h4>
+            <p>Perancangan lava dengan fokus kemanisan dan kelembutan.</p>
+          </div>
+          <div class="work-item">
+            <h4>Nugget</h4>
+            <p>Penggorengan nugget dengan fokus kemasakan dan cita rasa.</p>
+          </div>
+        </div>
+
+        <footer>
+          © 2025 — Serli Dwi Lestari Oktavia. All rights reserved.
+        </footer>
+      </main>
+
+      <aside class="card-3d-wrap">
+        <div class="card-3d" id="card">
+          <div class="layer l1" aria-hidden="true"></div>
+          <div class="layer l2" aria-hidden="true"></div>
+
+          <div class="card-inner">
+            <div class="meta">
+              <div style="display:flex;gap:14px;align-items:center">
+                <div class="avatar">Me</div>
+                <div class="info">
+                  <h3>Serli</h3>
+                  <p>Penjualan • Puding &amp; Nugget</p>
+                </div>
+              </div>
+              <div style="text-align:right;color:var(--muted)">Sulsel, Indonesia</div>
+            </div>
+
+            <div>
+              <p style="margin:0;color:var(--muted)">Saya membuat project pemesanan online — fous pada kualitas rasa, dan kerapihan penyajian.</p>
+            </div>
+
+            <div class="stats">
+              <div class="stat"><strong>2</strong><div style="font-size:12px;color:var(--muted)">Projects</div></div>
+              <div class="stat"><strong>5</strong><div style="font-size:12px;color:var(--muted)">Years</div></div>
+              <div class="stat"><strong>10+</strong><div style="font-size:12px;color:var(--muted)">Clients</div></div>
+            </div>
+
+            <div style="margin-top:auto;display:flex;gap:12px;align-items:center">
+              <button style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(90deg,var(--accent),#9bd0ff);font-weight:700;cursor:pointer;box-shadow:0 10px 26px rgba(122,162,255,0.18)">Hire me</button>
+              <button style="padding:10px;border-radius:12px;border:1px solid rgba(30,40,60,0.06);background:transparent;cursor:pointer">Download CV</button>
+            </div>
+          </div>
+
+          <!-- subtle 3D object: a floating card -- simple decorative element -->
+          <svg style="position:absolute;right:20px;bottom:18px;transform:translateZ(30px) rotateZ(-8deg);opacity:.95" width="150" height="90" viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="138" height="78" rx="12" fill="white" opacity="0.8"/>
+            <rect x="10" y="12" width="80" height="54" rx="8" fill="#f6faff"/>
+            <rect x="100" y="20" width="36" height="16" rx="6" fill="#fff0f6"/>
+          </svg>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    // Small tilt effect for the right card to create a 3D feel
+    (function(){
+      const card = document.getElementById('card');
+      const limit = 18; // max degrees
+
+      function handleMove(e){
+        const rect = card.getBoundingClientRect();
+        const x = ( (e.clientX || e.touches?.[0]?.clientX) - rect.left ) / rect.width;
+        const y = ( (e.clientY || e.touches?.[0]?.clientY) - rect.top ) / rect.height;
+
+        const rx = (y - 0.5) * limit * -1; // invert to tilt towards cursor
+        const ry = (x - 0.5) * limit;
+
+        card.style.transform = rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0);
+      }
+      function handleLeave(){
+        card.style.transition = 'transform 600ms cubic-bezier(.2,.9,.3,1)';
+        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        setTimeout(()=>card.style.transition='transform .15s ease-out',700);
+      }
+
+      ['mousemove','touchmove'].forEach(ev => document.addEventListener(ev, function(e){
+        // only apply tilt when pointer is over the card area
+        const rect = card.getBoundingClientRect();
+        const px = e.clientX || e.touches?.[0]?.clientX;
+        const py = e.clientY || e.touches?.[0]?.clientY;
+        if(px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom){
+          card.style.transition = 'transform .05s linear';
+          handleMove(e);
+        }
+      }));
+      ['mouseleave','touchend','touchcancel'].forEach(ev => card.addEventListener(ev, handleLeave));
+
+      // small parallax on project cards
+      document.querySelectorAll('.proj').forEach(p => {
+        p.addEventListener('mousemove', e => {
+          const r = p.getBoundingClientRect();
+          const x = (e.clientX - r.left)/r.width - 0.5;
+          const y = (e.clientY - r.top)/r.height - 0.5;
+          p.style.transform = translateZ(12px) translateY(-6px) rotateX(${ -y*6 }deg) rotateY(${ x*6 }deg);
+        });
+        p.addEventListener('mouseleave', ()=> p.style.transform='');
+      });
+
+    })();
+  </script>
+</body>
+</html>
